@@ -32,4 +32,25 @@ export async function findUserByMobile(mobile) {
     }
 }
 
+export async function findAllUsers(){
+    try{
+        const {rows} = await pool.query(
+            `SELECT  
+                u.name,
+                u.email,
+                u.mobile,
+                u.profile_pic,
+                t.name AS team_name,
+                tm.role
+             FROM auths.team_members tm
+             JOIN auths.users u ON tm.user_id = u.id
+             JOIN auths.teams t ON tm.team_id = t.id
+            `
+        );
+        return rows;
+    }catch(err){
+        document.writeln("Error: ",err.message);
+    }
+}
+
 export default create;

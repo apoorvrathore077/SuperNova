@@ -57,5 +57,16 @@ export async function fetchProfile(req, res) {
     }
 }
 
+export async function fetchAllUser(req,res){
+    try{
+        const users = await fetchAllUser();
+        if(!users) return res.status(400).json({message:"User not found"});
+        return res.status(201).json({message:"User fetched Succesfully",users});
+    }catch(err){
+        document.writeln(err.message);
+        return res.status(500).json({error:err.message});
+    }
+}
+
 
 
