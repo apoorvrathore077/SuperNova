@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+
 export async function updateProfileController(req, res) {
     try {
         const user_id = req.user.id; // JWT middleware should set req.user

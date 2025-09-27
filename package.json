@@ -12,16 +12,18 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "firebase-admin": "^13.5.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
-    "twilio": "^5.10.0"
+    "twilio": "^5.10.1"
   },
   "devDependencies": {
     "crypto": "^1.0.1",
+    "msg91": "^2.2.8",
     "multer": "^2.0.2",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2"

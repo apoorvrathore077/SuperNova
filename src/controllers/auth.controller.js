@@ -2,10 +2,15 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import pool from "../config/db.js";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 import { findUserByEmail, findUserByMobile } from "../models/user.model.js";
+import twilio from "twilio";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 
-
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 function generateOtp() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -64,12 +69,25 @@ export async function forgetPasword(req, res) {
             [user.id, mobile, otpCode, expiresAt]
         );
 
+        try {
+            const message = await client.messages.create({
+                body: `Your OTP code is: ${otpCode}`,
+                from: process.env.TWILIO_PHONE_NUMBER,
+                to: mobile // make sure this includes country code, e.g., +91XXXXXXXXXX
+            });
+            console.log('OTP sent:', message.sid);
+        } catch (err) {
+            console.log("SMS not sent", err.message);
+            return res.status(500).json({ error: "SMS not sent", message: err.message });
+        }
+
         res.status(201).json({ message: "OTP Generated: ", otpCode });
 
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
+
 export async function resetPassword(req, res) {
     try {
         const { mobile, otp_code, newPassword, confirmNewPassword } = req.body;

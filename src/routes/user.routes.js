@@ -11,3 +11,7 @@ router.post("/signup",upload.single("profile_pic"),createUser);
 router.get("/profile",authenticateToken,fetchProfile);
 router.put("/updateProfile",authenticateToken,upload.single("profile_pic"),updateProfileController);
 export default router;
+
+
+
+               

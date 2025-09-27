@@ -4,7 +4,7 @@ import pool from "../config/db.js";
 
 export async function createUser(req, res) {
     try {
-        const { name, email, password, mobile} = req.body;
+        const { name, email, password, mobile,global_role} = req.body;
         const profile_pic = req.file ? req.file.filename : null;
         if (!name || !email || !password || !mobile) {
             res.status(400).json({ message: "All fields are required" });
@@ -19,7 +19,8 @@ export async function createUser(req, res) {
             email,
             mobile,
             profile_pic: profile_pic || null,
-            password: hashedPassword
+            password: hashedPassword,
+            global_role:global_role
         });
         res.status(201).json({ message: "User created", user });
     } catch (err) {
