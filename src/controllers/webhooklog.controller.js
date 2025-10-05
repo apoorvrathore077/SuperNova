@@ -19,8 +19,9 @@ export async function createWebhookLogController(req, res) {
     res.status(201).json({ message: "Webhook logged", webhook_log: webhookLog });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+    res.status(500).json({ error:error.message || "Internal server error"  });
+  
+}
 }
 
 // Get all webhook logs

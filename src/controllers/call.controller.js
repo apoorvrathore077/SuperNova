@@ -1,4 +1,12 @@
 import { createCall, getAllCalls, getCallById, getCallsByTeamId } from "../models/call.model.js";
+import twilio from "twilio";
+import dotenv from "dotenv";
+
+dotenv.config();
+const account_sid = process.env.TWILIO_ACCOUNT_SID;
+const auth_token = process.env.TWILIO_AUTH_TOKEN;
+const twilio_number = process.env.TWILIO_NUMBER;
+const client = twilio(account_sid, auth_token);
 
 // Create a call
 export async function createCallController(req, res) {
@@ -9,7 +17,22 @@ export async function createCallController(req, res) {
       return res.status(400).json({ message: "Invalid call data" });
     }
 
-    const call = await createCall({ teamId: team_id, call_ssid, from_number, to_number, status, started_at, ended_at, recording_url });
+    const twilioCall = await client.calls.create({
+      url: 'http://demo.twilio.com/docs/voice.xml',
+      to: to_number,
+      from: twilio_number
+    });
+
+    const call = await createCall({
+      teamId: team_id,
+      call_ssid,
+      from_number,
+      to_number,
+      status: twilioCall.status,
+      started_at: twilioCall.startTime || new Date(),
+      ended_at,
+      recording_url
+    });
     res.status(201).json({ message: "Call recorded", call });
   } catch (error) {
     console.error(error);
