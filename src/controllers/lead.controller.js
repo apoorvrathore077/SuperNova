@@ -50,9 +50,9 @@ export async function getAllLeadsController(req, res) {
   try {
     const leads = await getAllLeads();
     res.json({ leads });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
   }
 }
 
