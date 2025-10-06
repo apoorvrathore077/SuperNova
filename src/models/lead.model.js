@@ -1,15 +1,5 @@
 import pool from "../config/db.js";
 
-// Create a new lead
-export async function createLead({ teamId, phone, name, notes }) {
-  const { rows } = await pool.query(
-    `INSERT INTO crm.leads (team_id, phone, name, notes)
-     VALUES ($1, $2, $3, $4)
-     RETURNING *`,
-    [teamId || null, phone, name || null, notes || null]
-  );
-  return rows[0];
-}
 
 // Get a lead by ID
 export async function getLeadById(id) {

@@ -13,7 +13,7 @@ const leadRoutes = express.Router();
 leadRoutes.get("/crm/leads/:id", getLeadByIdController);
 
 // Get all leads
-leadRoutes.get("/crm/leads/get", getAllLeadsController);
+leadRoutes.get("/crm/leads", getAllLeadsController);
 
 // Get all leads by team ID
 leadRoutes.get("/crm/leads/team/:team_id", getLeadsByTeamIdController);

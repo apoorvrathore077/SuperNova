@@ -1,35 +1,10 @@
 import {
-  createLead,
   getLeadById,
   getAllLeads,
   getLeadsByTeamId
 } from "../models/lead.model.js";
 
-// Create a new lead
-export async function createLeadController(req, res) {
-  try {
-    const { team_id, phone, name, notes } = req.body;
 
-    if (!phone) {
-      return res.status(400).json({ message: "Phone number is required" });
-    }
-
-    const lead = await createLead({
-      teamId: team_id,
-      phone,
-      name,
-      notes
-    });
-
-    res.status(201).json({
-      message: "Lead created",
-      lead
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}
 
 // Get a lead by ID
 export async function getLeadByIdController(req, res) {
