@@ -52,7 +52,7 @@ export async function getAllLeadsController(req, res) {
     res.json({ leads });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: error.message });
   }
 }
 
