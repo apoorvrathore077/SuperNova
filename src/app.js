@@ -16,14 +16,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use("/api/users",router);
-app.use("/api/auth",authRouter);
-app.use("/api",teamRoute);
-app.use("/api",teamMemberRouter);
-app.use("/api", leadRoutes);
-app.use("/api",callRouter);
-app.use("/api",phoneNumberRoute);
-app.use("/api",webhookLogRouter);
+app.use("/api/digidial/users",router);
+app.use("/api/digidail/auth",authRouter);
+app.use("/api/digidial",teamRoute);
+app.use("/api/digidial",teamMemberRouter);
+app.use("/api/digidial", leadRoutes);
+app.use("/api/digidial",callRouter);
+app.use("/api/digidial",phoneNumberRoute);
+app.use("/api/digidial",webhookLogRouter);
 app.use("/twiml", twilioRouter);
 
 

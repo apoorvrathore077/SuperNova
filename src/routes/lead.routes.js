@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  createLeadController,
   getLeadByIdController,
   getAllLeadsController,
   getLeadsByTeamIdController
@@ -8,8 +7,7 @@ import {
 
 const leadRoutes = express.Router();
 
-// Create a lead
-leadRoutes.post("/crm/leads/create", createLeadController);
+
 
 // Get a lead by ID
 leadRoutes.get("/crm/leads/:id", getLeadByIdController);

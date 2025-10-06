@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  addPhoneNumberController,
   getAllPhoneNumbersController,
   getPhoneNumberByIdController,
   getPhoneNumbersByTeamController
@@ -8,8 +7,7 @@ import {
 
 const phoneNumberRoute = express.Router();
 
-// Add a phone number
-phoneNumberRoute.post("/telephony/phone-numbers/add", addPhoneNumberController);
+
 
 // Get all phone numbers
 phoneNumberRoute.get("/telephony/phone-numbers/get", getAllPhoneNumbersController);

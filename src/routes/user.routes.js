@@ -1,4 +1,3 @@
-import { forgetPasword } from "../controllers/auth.controller.js";
 import {createUser, fetchProfile} from "../controllers/user.controller.js";
 import express from "express";
 import { upload } from "../middleware/uploads.middleware.js";
@@ -14,4 +13,4 @@ export default router;
 
 
 
-               
+            
