@@ -8,6 +8,7 @@ import leadRoutes from "./routes/lead.routes.js";
 import callRouter from "./routes/call.routes.js";
 import phoneNumberRoute from "./routes/phonenumber.routes.js";
 import webhookLogRouter from "./routes/webhooklog.routes.js";
+import twilioRouter from "./routes/twiml.routes.js";
 
 
 dotenv.config();
@@ -23,5 +24,7 @@ app.use("/api", leadRoutes);
 app.use("/api",callRouter);
 app.use("/api",phoneNumberRoute);
 app.use("/api",webhookLogRouter);
+app.use("/twiml", twilioRouter);
+
 
 export default app;
