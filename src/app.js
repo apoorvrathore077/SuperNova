@@ -16,8 +16,18 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+// ✅ Basic test route
+app.get("/", (req, res) => {
+  res.status(200).send("OK");
+});
+
+// ✅ Health check route
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
+
 app.use("/api/digidial/users",router);
-app.use("/api/digidail/auth",authRouter);
+app.use("/api/digidial/auth",authRouter);
 app.use("/api/digidial",teamRoute);
 app.use("/api/digidial",teamMemberRouter);
 app.use("/api/digidial", leadRoutes);

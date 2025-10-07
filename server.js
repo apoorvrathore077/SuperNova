@@ -1,24 +1,58 @@
+// import http from "http";
+// import dotenv from "dotenv";
+// import pool from "./src/config/db.js";
+// import app from "./src/app.js";
+
+// dotenv.config();
+// const port = process.env.PORT || 5000;
+
+// // Test connection, inspect database, insert test user
+// pool.connect()
+//   .then(async client => {
+//     console.log("Database Connected: ",process.env.DB_NAME)
+//     client.release();
+//   })
+//   .catch(err => {
+//     console.error("❌ PostgreSQL connection error:", err.message);
+//   });
+
+// // Create HTTP server
+// const server = http.createServer(app);
+
+// server.listen(port, () => {
+//   console.log(`\nServer is running on http://localhost:${port}`);
+// });
+
+// export {app, server };
+
+
 import http from "http";
 import dotenv from "dotenv";
 import pool from "./src/config/db.js";
 import app from "./src/app.js";
+import { initTwilioSocket } from "./src/socket/twillio.socket.js";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
 
-// Test connection, inspect database, insert test user
+// --- Connect to PostgreSQL ---
 pool.connect()
   .then(async client => {
-    console.log("Database Connected: ",process.env.DB_NAME)
+    console.log("✅ Database Connected:", process.env.DB_NAME);
     client.release();
   })
   .catch(err => {
     console.error("❌ PostgreSQL connection error:", err.message);
   });
 
-// Create HTTP server
+// --- Create HTTP server instance ---
 const server = http.createServer(app);
+initTwilioSocket(server); // Initialize Twilio WebSocket
+// --- Conditional Start (skip when testing) ---
+if (process.env.NODE_ENV !== "test") {
+  server.listen(port, () => {
+    console.log(`\n🚀 Server running at http://localhost:${port}`);
+  });
+}
 
-server.listen(port, () => {
-  console.log(`\nServer is running on http://localhost:${port}`);
-});
+export { app, server };

@@ -6,3 +6,7 @@ authRouter.post("/send-otp",sendOtp);
 authRouter.post("/verify",verifyOtp);
 
 export default authRouter;
+
+
+
+

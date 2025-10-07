@@ -7,6 +7,7 @@ const account_sid = process.env.TWILIO_ACCOUNT_SID;
 const auth_token = process.env.TWILIO_AUTH_TOKEN;
 const twilio_number = process.env.TWILIO_PHONE_NUMBER;
 const client = twilio(account_sid, auth_token);
+const base_url = process.env.BASE_URL || "http://localhost:5000";
 
 // Create a call
 // ✅ Create a call
@@ -24,7 +25,7 @@ export async function createCallController(req, res) {
 
     // 🔹 Make the actual call via Twilio
     const twilioCall = await client.calls.create({
-      url: "http://demo.twilio.com/docs/voice.xml", // or your custom TwiML endpoint
+      url:`https://${base_url}/api/voice`, // or your custom TwiML endpoint
       to: to_number,
       from: twilio_number,
       record: true // optional: enables automatic recording
@@ -90,6 +91,15 @@ export async function getCallsByTeamController(req, res) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
+}
+
+export function voiceHandler(req, res) {
+  const twiml = new twilio.twiml.VoiceResponse();
+  const connect = twiml.connect();
+  connect.stream({ url: `wss://${ngrok_url}/audio-stream` }); // WS URL
+
+  res.type("text/xml");
+  res.send(twiml.toString());
 }
 
 
