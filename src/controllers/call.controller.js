@@ -102,6 +102,11 @@ export function voiceHandler(req, res) {
   res.send(twiml.toString());
 }
 
+export function processSpeech(req, res) {
+  console.log("✅ Speech data received:", req.body);
+  res.status(200).send("OK");
+}
+
 
 
 

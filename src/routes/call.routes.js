@@ -4,7 +4,8 @@ import {
   getAllCallsController,
   getCallByIdController,
   getCallsByTeamController,
-  voiceHandler
+  voiceHandler,
+  processSpeech
 } from "../controllers/call.controller.js";
 
 const callRouter = express.Router();
@@ -22,4 +23,5 @@ callRouter.get("/telephony/calls/:id", getCallByIdController);
 callRouter.get("/telephony/calls/team/:team_id", getCallsByTeamController);
 
 callRouter.post("/voice", voiceHandler); // TwiML Voice endpoint
+callRouter.post("/process-speech", processSpeech); // Speech processing endpoint
 export default callRouter;
