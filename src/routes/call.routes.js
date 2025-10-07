@@ -22,6 +22,6 @@ callRouter.get("/telephony/calls/:id", getCallByIdController);
 // Get all calls by team ID
 callRouter.get("/telephony/calls/team/:team_id", getCallsByTeamController);
 
-callRouter.post("/voice", voiceHandler); // TwiML Voice endpoint
-callRouter.post("/process-speech", processSpeech); // Speech processing endpoint
+callRouter.post("/voice", voiceHandler);
+callRouter.post("/process-speech", processSpeech);
 export default callRouter;

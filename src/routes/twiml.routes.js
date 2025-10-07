@@ -17,7 +17,7 @@ twilioRouter.post("/voice", (req, res) => {
   // User ka speech input lena
   twiml.gather({
     input: 'speech',
-    action: '/twiml/process-speech',
+    action: '/twiml/api/process-speech',
     speechTimeout: 'auto',
     language: 'hi-IN', // Hindi recognition
     hints: 'hello, help, support' // recognition improve karne ke liye

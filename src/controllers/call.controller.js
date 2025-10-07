@@ -94,17 +94,50 @@ export async function getCallsByTeamController(req, res) {
 }
 
 export function voiceHandler(req, res) {
-  const twiml = new twilio.twiml.VoiceResponse();
-  const connect = twiml.connect();
-  connect.stream({ url: `wss://${base_url}/audio-stream` }); // WS URL
+  const VoiceResponse = require("twilio").twiml.VoiceResponse;
+  const twiml = new VoiceResponse();
 
-  res.type("text/xml");
+  twiml.say({ voice: 'Polly.Aditi', language: 'hi-IN' }, 'नमस्ते! आपका स्वागत है।');
+
+  // Connect live audio stream to WebSocket
+  const connect = twiml.connect();
+  connect.stream({ url: `${process.env.BASE_URL.replace(/^https?:\/\//,'wss://')}/audio-stream` });
+
+  // Gather speech
+  twiml.gather({
+    input: 'speech',
+    action: `${process.env.BASE_URL}/api/digidial/process-speech`,
+    speechTimeout: 'auto',
+    language: 'hi-IN'
+  });
+
+  res.type('text/xml');
   res.send(twiml.toString());
 }
 
+
 export function processSpeech(req, res) {
-  console.log("✅ Speech data received:", req.body);
-  res.status(200).send("OK");
+  const VoiceResponse = twilio.twiml.VoiceResponse;
+  const twiml = new VoiceResponse();
+  const userSpeech = req.body.SpeechResult;
+
+  console.log("✅ User said:", userSpeech);
+
+  if (!userSpeech) {
+    twiml.say('माफ़ करें, हमें आपकी बात समझ नहीं आई।');
+    twiml.redirect(`${base_url}/api/voice`);
+  } else {
+    twiml.say(`आपने कहा: ${userSpeech}`);
+    twiml.gather({
+      input: 'speech',
+      action: `${base_url}/api/process-speech`,
+      speechTimeout: 'auto',
+      language: 'hi-IN'
+    });
+  }
+
+  res.type('text/xml');
+  res.send(twiml.toString());
 }
 
 
