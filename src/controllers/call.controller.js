@@ -25,7 +25,7 @@ export async function createCallController(req, res) {
 
     // 🔹 Make the actual call via Twilio
     const twilioCall = await client.calls.create({
-      url:`https://${base_url}/api/voice`, // or your custom TwiML endpoint
+      url:`${base_url}/api/voice`, // or your custom TwiML endpoint
       to: to_number,
       from: twilio_number,
       record: true // optional: enables automatic recording
@@ -96,7 +96,7 @@ export async function getCallsByTeamController(req, res) {
 export function voiceHandler(req, res) {
   const twiml = new twilio.twiml.VoiceResponse();
   const connect = twiml.connect();
-  connect.stream({ url: `wss://${ngrok_url}/audio-stream` }); // WS URL
+  connect.stream({ url: `wss://${base_url}/audio-stream` }); // WS URL
 
   res.type("text/xml");
   res.send(twiml.toString());
