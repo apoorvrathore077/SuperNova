@@ -78,7 +78,7 @@ twilioRouter.post("/process-speech", (req, res) => {
     // Continue conversation
     twiml.gather({
       input: 'speech',
-      action: '/twiml/process-speech',
+      action: '/twiml/api/process-speech',
       speechTimeout: 'auto',
       language: 'hi-IN'
     });
