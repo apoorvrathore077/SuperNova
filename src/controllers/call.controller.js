@@ -94,7 +94,7 @@ export async function getCallsByTeamController(req, res) {
 }
 
 export function voiceHandler(req, res) {
-  const VoiceResponse = require("twilio").twiml.VoiceResponse;
+  const VoiceResponse = twilio.twiml.VoiceResponse; // ✅ correct ESM
   const twiml = new VoiceResponse();
 
   twiml.say({ voice: 'Polly.Aditi', language: 'hi-IN' }, 'नमस्ते! आपका स्वागत है।');
