@@ -25,7 +25,7 @@ export async function createCallController(req, res) {
 
     // 🔹 Make the actual call via Twilio
     const twilioCall = await client.calls.create({
-      url:`${base_url}/api/voice`, // or your custom TwiML endpoint
+      url:`${base_url}/twiml/voice`, // or your custom TwiML endpoint
       to: to_number,
       from: twilio_number,
       record: true // optional: enables automatic recording
