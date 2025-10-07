@@ -34,7 +34,7 @@ app.use("/api/digidial", leadRoutes);
 app.use("/api/digidial",callRouter);
 app.use("/api/digidial",phoneNumberRoute);
 app.use("/api/digidial",webhookLogRouter);
-app.use("/twiml", twilioRouter);
+app.use("/api", twilioRouter);
 
 
 export default app;
