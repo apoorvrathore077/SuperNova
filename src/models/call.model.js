@@ -62,3 +62,8 @@ export async function updateCallStatusBySid(callSid, updateData) {
   return rows[0];
 }
 
+export async function getCallByTwilioSid(callSid) {
+  const query = `SELECT * FROM telephony.calls WHERE call_ssid = $1 LIMIT 1`;
+  const { rows } = await pool.query(query, [callSid]);
+  return rows[0];
+}

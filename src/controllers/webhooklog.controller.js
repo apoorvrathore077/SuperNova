@@ -4,29 +4,40 @@ import {
   getWebhookLogById,
   getWebhookLogsByTeam
 } from "../models/webhooklog.model.js";
-import { updateCallStatusBySid } from "../models/call.model.js";
+import { getCallByTwilioSid } from "../models/call.model.js";
 
-
-// Create a webhook log
 export async function createWebhookLogController(req, res) {
   try {
     console.log("🔥 Twilio Webhook Received:", req.body);
 
-    const payload = req.body || {};
-    const event_type = payload.CallStatus ? `call.${payload.CallStatus}` : req.body.event_type;
-    const team_id = req.body.team_id || null;
+    const payload = req.body;
 
-    if (!event_type || !payload) {
-      return res.status(400).json({ message: "Event type and payload required" });
+    // 1️⃣ Get Call from DB using CallSid
+    let callRecord = null;
+    if (payload.CallSid) {
+      callRecord = await getCallByTwilioSid(payload.CallSid); // ✅ Need to implement this in call.model.js
     }
 
+    const team_id = callRecord?.team_id || null; // team_id from DB
+
+    // 2️⃣ Determine event type
+    const event_type = payload.CallStatus ? `call.${payload.CallStatus}` : "unknown";
+
+    if (!team_id) {
+      console.warn("⚠️ Team ID not found for CallSid:", payload.CallSid);
+      // optional: reject or allow null if table allows
+    }
+
+    // 3️⃣ Create webhook log
     const webhookLog = await createWebhookLog({
       teamId: team_id,
       event_type,
       payload,
     });
 
+    console.log("✅ Webhook logged:", webhookLog.id);
     res.status(201).json({ message: "Webhook logged ✅", webhook_log: webhookLog });
+
   } catch (error) {
     console.error("❌ Twilio webhook error:", error);
     res.status(500).json({ error: error.message });
