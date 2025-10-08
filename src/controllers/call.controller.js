@@ -36,7 +36,7 @@ export async function createCallController(req, res) {
     // 🔹 Save call record to your DB
     const call = await createCall({
       teamId: team_id,
-      call_ssid,
+      call_ssid: twilioCall.sid,
       from_number: twilio_number, // use Twilio number as 'from'
       to_number,
       status: twilioCall.status,
