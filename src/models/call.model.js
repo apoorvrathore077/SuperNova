@@ -46,3 +46,19 @@ export async function getCallsByTeamId(teamId) {
   );
   return rows;
 }
+
+// models/call.model.js
+export async function updateCallStatusBySid(callSid, updateData) {
+  const { status, ended_at } = updateData;
+  const query = `
+    UPDATE telephony.calls
+    SET status = $1,
+        ended_at = $2
+    WHERE twilio_call_sid = $3
+    RETURNING *;
+  `;
+  const values = [status, ended_at || null, callSid];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+}
+

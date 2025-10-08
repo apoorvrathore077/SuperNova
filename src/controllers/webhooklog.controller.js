@@ -4,37 +4,33 @@ import {
   getWebhookLogById,
   getWebhookLogsByTeam
 } from "../models/webhooklog.model.js";
+import { updateCallStatusBySid } from "../models/call.model.js";
+
 
 // Create a webhook log
 export async function createWebhookLogController(req, res) {
-  try {
-    const { team_id, event_type, payload } = req.body;
+    try {
+    const payload = req.body; // Twilio POST data
+    const callSid = payload.CallSid;
+    const callStatus = payload.CallStatus; // queued, ringing, in-progress, completed
 
-    let logPayload = payload;
-    let logEventType = event_type;
-
-    // ✅ Agar Twilio webhook hai (unme CallStatus hota hai)
-    if (payload && payload.CallStatus) {
-      logEventType = `call.${payload.CallStatus}`; // queued, ringing, in-progress, completed
-      logPayload = payload;
-    }
-
-    if (!logEventType || !logPayload) {
-      return res.status(400).json({ message: "Event type and payload required" });
-    }
-
-    const webhookLog = await createWebhookLog({
-      teamId: team_id || payload.TeamId || null, // optional
-      event_type: logEventType,
-      payload: logPayload
+    // 1️⃣ Webhook log me save
+    await createWebhookLog({
+      teamId: payload.team_id || null,
+      event_type: `call.${callStatus}`,
+      payload
     });
 
-    console.log("✅ Webhook logged:", webhookLog.id);
+    // 2️⃣ Call table update
+    const updateData = { status: callStatus };
+    if (callStatus === "completed") updateData.ended_at = new Date();
 
-    res.status(201).json({ message: "Webhook logged", webhook_log: webhookLog });
+    await updateCallStatusBySid(callSid, updateData);
+
+    res.status(200).send("Webhook received");
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || "Internal server error" });
+    console.error("❌ Twilio webhook error:", error);
+    res.status(500).send("Internal server error");
   }
 }
 
