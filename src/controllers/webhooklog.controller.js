@@ -10,33 +10,29 @@ import { updateCallStatusBySid } from "../models/call.model.js";
 // Create a webhook log
 export async function createWebhookLogController(req, res) {
   try {
-    console.log("🔥 Twilio Webhook Received:", req.body); // log the payload
-    const payload = req.body; // Twilio POST data
-    const callSid = payload.call_ssid || payload.CallSid; // unique call identifier
-    if (!callSid) {
-      return res.status(400).json({ error: "Missing CallSid in payload" });
-    }
-    const callStatus = payload.twilioCall.status; // queued, ringing, in-progress, completed
+    console.log("🔥 Twilio Webhook Received:", req.body);
 
-    // 1️⃣ Webhook log me save
-    await createWebhookLog({
-      teamId: payload.team_id || null,
-      event_type: `call.${callStatus}`,
-      payload
+    const payload = req.body || {};
+    const event_type = payload.CallStatus ? `call.${payload.CallStatus}` : req.body.event_type;
+    const team_id = req.body.team_id || null;
+
+    if (!event_type || !payload) {
+      return res.status(400).json({ message: "Event type and payload required" });
+    }
+
+    const webhookLog = await createWebhookLog({
+      teamId: team_id,
+      event_type,
+      payload,
     });
 
-    // 2️⃣ Call table update
-    const updateData = { status: callStatus };
-    if (callStatus === "completed") updateData.ended_at = new Date();
-
-    await updateCallStatusBySid(callSid, updateData);
-
-    res.status(200).json({ message: "Webhook received" });
-  } catch (err) {
-    console.error("❌ Twilio webhook error:", err.message);
-    return res.status(500).json({error: err.message} );
+    res.status(201).json({ message: "Webhook logged ✅", webhook_log: webhookLog });
+  } catch (error) {
+    console.error("❌ Twilio webhook error:", error);
+    res.status(500).json({ error: error.message });
   }
 }
+
 
 // Get all webhook logs
 export async function getAllWebhookLogsController(req, res) {

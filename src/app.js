@@ -15,6 +15,8 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // ✅ Twilio sends form-data, not JSON
+
 
 // ✅ Basic test route
 app.get("/", (req, res) => {
@@ -26,17 +28,16 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "OK" });
 });
 
-app.use("/api/digidial/users",router);
-app.use("/api/digidial/auth",authRouter);
-app.use("/api/digidial",teamRoute);
-app.use("/api/digidial",teamMemberRouter);
+app.use("/api/digidial/users", router);
+app.use("/api/digidial/auth", authRouter);
+app.use("/api/digidial", teamRoute);
+app.use("/api/digidial", teamMemberRouter);
 app.use("/api/digidial", leadRoutes);
-app.use("/api/digidial",callRouter);
-app.use("/api/digidial",phoneNumberRoute);
-app.use("/api/digidial",webhookLogRouter);
+app.use("/api/digidial", callRouter);
+app.use("/api/digidial", phoneNumberRoute);
+app.use("/api/digidial", webhookLogRouter);
 app.use("/api", twilioRouter);
 
-app.use(express.urlencoded({ extended: true }));
 
 
 export default app;
