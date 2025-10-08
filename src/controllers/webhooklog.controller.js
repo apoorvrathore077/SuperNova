@@ -28,10 +28,10 @@ export async function createWebhookLogController(req, res) {
 
     await updateCallStatusBySid(callSid, updateData);
 
-    res.status(200).send("Webhook received");
-  } catch (error) {
-    console.error("❌ Twilio webhook error:", error);
-    res.status(500).send("Internal server error");
+    res.status(200).json({ message: "Webhook received" });
+  } catch (err) {
+    console.error("❌ Twilio webhook error:", err.message);
+    return res.status(500).json({error: err.message} );
   }
 }
 
