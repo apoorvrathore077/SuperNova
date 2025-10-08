@@ -82,6 +82,7 @@ export async function verifyOtp(req, res) {
             [user.id, token, expiresAt]
         )
         res.status(201).json({
+            success: true,
             message: "Login succesfull", token, user: {
                 id: user.id,
                 name: user.name,

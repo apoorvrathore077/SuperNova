@@ -4,6 +4,7 @@ import {
   getAllCallsController,
   getCallByIdController,
   getCallsByTeamController,
+  twilioCallStatusWebhook,
   voiceHandler,
   processSpeech
 } from "../controllers/call.controller.js";
@@ -24,4 +25,6 @@ callRouter.get("/telephony/calls/team/:team_id", getCallsByTeamController);
 
 callRouter.post("/voice", voiceHandler);
 callRouter.post("/process-speech", processSpeech);
+callRouter.post("/telephony/twilio-call-status", twilioCallStatusWebhook);
+
 export default callRouter;

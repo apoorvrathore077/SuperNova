@@ -29,7 +29,7 @@ export async function createCallController(req, res) {
       to: to_number,
       from: twilio_number,
       record: true,
-      statusCallback: `${base_url}/api/digidial/webhook/twilio-call-status`, // ✅ webhook endpoint
+      statusCallback: `${base_url}/api/digidial/telephony/twilio-call-status`,
       statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'] // jo events chahiye // optional: enables automatic recording
     });
 
@@ -140,6 +140,40 @@ export function processSpeech(req, res) {
 
   res.type('text/xml');
   res.send(twiml.toString());
+}
+
+export async function twilioCallStatusWebhook(req, res) {
+  try {
+    const payload = req.body;
+
+    console.log("🔥 Twilio Webhook Received:", payload);
+
+    const callSid = payload.CallSid; // Twilio se aane wala SID
+    const callStatus = payload.CallStatus; // queued, ringing, in-progress, completed
+
+    if (!callSid) {
+      return res.status(400).send("Missing CallSid");
+    }
+
+    // DB update
+    const endedAt = callStatus === "completed" ? new Date() : null;
+    const updatedCall = await updateCallStatusBySid(callSid, {
+      status: callStatus,
+      ended_at: endedAt
+    });
+
+    // Webhook log
+    await createWebhookLog({
+      teamId: updatedCall?.team_id || null,
+      event_type: `call.${callStatus}`,
+      payload
+    });
+
+    res.status(200).send("Webhook processed");
+  } catch (error) {
+    console.error("❌ Twilio webhook error:", error);
+    res.status(500).send("Internal server error");
+  }
 }
 
 
