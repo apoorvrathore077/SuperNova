@@ -25,10 +25,12 @@ export async function createCallController(req, res) {
 
     // 🔹 Make the actual call via Twilio
     const twilioCall = await client.calls.create({
-      url:`${base_url}/api/digidial/voice`, // or your custom TwiML endpoint
+      url: `${base_url}/api/digidial/voice`, // or your custom TwiML endpoint
       to: to_number,
       from: twilio_number,
-      record: true // optional: enables automatic recording
+      record: true,
+      statusCallback: `${base_url}/api/webhook/twilio-call-status`, // ✅ webhook endpoint
+      statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'] // jo events chahiye // optional: enables automatic recording
     });
 
     // 🔹 Save call record to your DB
@@ -101,7 +103,7 @@ export function voiceHandler(req, res) {
 
   // Connect live audio stream to WebSocket
   const connect = twiml.connect();
-  connect.stream({ url: `${process.env.BASE_URL.replace(/^https?:\/\//,'wss://')}/audio-stream` });
+  connect.stream({ url: `${process.env.BASE_URL.replace(/^https?:\/\//, 'wss://')}/audio-stream` });
 
   // Gather speech
   twiml.gather({

@@ -9,7 +9,7 @@ import {
 const webhookLogRouter = express.Router();
 
 // Create a webhook log
-webhookLogRouter.post("/telephony/webhook/create", createWebhookLogController);
+webhookLogRouter.post("/twilio-call-status", createWebhookLogController);
 
 // Get all webhook logs
 webhookLogRouter.get("/telephony/webhook-logs", getAllWebhookLogsController);
