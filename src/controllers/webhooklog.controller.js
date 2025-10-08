@@ -9,7 +9,8 @@ import { updateCallStatusBySid } from "../models/call.model.js";
 
 // Create a webhook log
 export async function createWebhookLogController(req, res) {
-    try {
+  try {
+    console.log("🔥 Twilio Webhook Received:", req.body); // log the payload
     const payload = req.body; // Twilio POST data
     const callSid = payload.CallSid;
     const callStatus = payload.CallStatus; // queued, ringing, in-progress, completed

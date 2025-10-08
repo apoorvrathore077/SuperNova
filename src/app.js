@@ -36,5 +36,7 @@ app.use("/api/digidial",phoneNumberRoute);
 app.use("/api/digidial",webhookLogRouter);
 app.use("/api", twilioRouter);
 
+app.use(express.urlencoded({ extended: true }));
+
 
 export default app;
