@@ -2,6 +2,7 @@ import { createCall, getAllCalls, getCallById, getCallsByTeamId } from "../model
 import twilio from "twilio";
 import dotenv from "dotenv";
 import { updateCallStatusBySid } from "../models/call.model.js";
+import { createWebhookLog } from "../models/webhooklog.model.js";
 
 dotenv.config();
 const account_sid = process.env.TWILIO_ACCOUNT_SID;
