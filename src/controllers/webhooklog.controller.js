@@ -12,8 +12,11 @@ export async function createWebhookLogController(req, res) {
   try {
     console.log("🔥 Twilio Webhook Received:", req.body); // log the payload
     const payload = req.body; // Twilio POST data
-    const callSid = payload.CallSid;
-    const callStatus = payload.CallStatus; // queued, ringing, in-progress, completed
+    const callSid = payload.call_ssid || payload.CallSid; // unique call identifier
+    if (!callSid) {
+      return res.status(400).json({ error: "Missing CallSid in payload" });
+    }
+    const callStatus = payload.twilioCall.status; // queued, ringing, in-progress, completed
 
     // 1️⃣ Webhook log me save
     await createWebhookLog({
