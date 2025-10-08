@@ -29,7 +29,7 @@ export async function createCallController(req, res) {
       to: to_number,
       from: twilio_number,
       record: true,
-      statusCallback: `${base_url}/api/webhook/twilio-call-status`, // ✅ webhook endpoint
+      statusCallback: `${base_url}/api/digidial/webhook/twilio-call-status`, // ✅ webhook endpoint
       statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'] // jo events chahiye // optional: enables automatic recording
     });
 
