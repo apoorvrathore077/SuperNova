@@ -10,18 +10,32 @@ export async function createWebhookLogController(req, res) {
   try {
     const { team_id, event_type, payload } = req.body;
 
-    if (!event_type || !payload) {
+    let logPayload = payload;
+    let logEventType = event_type;
+
+    // ✅ Agar Twilio webhook hai (unme CallStatus hota hai)
+    if (payload && payload.CallStatus) {
+      logEventType = `call.${payload.CallStatus}`; // queued, ringing, in-progress, completed
+      logPayload = payload;
+    }
+
+    if (!logEventType || !logPayload) {
       return res.status(400).json({ message: "Event type and payload required" });
     }
 
-    const webhookLog = await createWebhookLog({ teamId: team_id, event_type, payload });
+    const webhookLog = await createWebhookLog({
+      teamId: team_id || payload.TeamId || null, // optional
+      event_type: logEventType,
+      payload: logPayload
+    });
+
+    console.log("✅ Webhook logged:", webhookLog.id);
 
     res.status(201).json({ message: "Webhook logged", webhook_log: webhookLog });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error:error.message || "Internal server error"  });
-  
-}
+    res.status(500).json({ error: error.message || "Internal server error" });
+  }
 }
 
 // Get all webhook logs
