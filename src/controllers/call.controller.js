@@ -1,6 +1,7 @@
 import { createCall, getAllCalls, getCallById, getCallsByTeamId } from "../models/call.model.js";
 import twilio from "twilio";
 import dotenv from "dotenv";
+import { updateCallStatusBySid } from "../models/call.model.js";
 
 dotenv.config();
 const account_sid = process.env.TWILIO_ACCOUNT_SID;
@@ -9,7 +10,6 @@ const twilio_number = process.env.TWILIO_PHONE_NUMBER;
 const client = twilio(account_sid, auth_token);
 const base_url = process.env.BASE_URL || "http://localhost:5000";
 
-// Create a call
 // ✅ Create a call
 export async function createCallController(req, res) {
   try {

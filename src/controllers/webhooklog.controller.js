@@ -4,6 +4,7 @@ import {
   getWebhookLogById,
   getWebhookLogsByTeam
 } from "../models/webhooklog.model.js";
+
 import { getCallByTwilioSid } from "../models/call.model.js";
 
 export async function createWebhookLogController(req, res) {
@@ -46,8 +47,6 @@ export async function createWebhookLogController(req, res) {
 
 
 // Get all webhook logs
-
-
 export async function getAllWebhookLogsController(req, res) {
   try {
     const logs = await getAllWebhookLogs();
