@@ -27,17 +27,17 @@ export async function sendOtp(req, res) {
             [user.id, mobile, otpCode, expiresAt]
         );
 
-        // try {
-        //     const message = await client.messages.create({
-        //         body: `Your OTP code is: ${otpCode}`,
-        //         from: process.env.TWILIO_PHONE_NUMBER,
-        //         to: mobile // make sure this includes country code, e.g., +91XXXXXXXXXX
-        //     });
-        //     console.log('OTP sent:', message.sid);
-        // } catch (err) {
-        //     console.log("SMS not sent", err.message);
-        //     return res.status(500).json({ error: "SMS not sent", message: err.message });
-        // }
+        try {
+            const message = await client.messages.create({
+                body: `Your OTP code is: ${otpCode}`,
+                from: process.env.TWILIO_PHONE_NUMBER,
+                to: mobile // make sure this includes country code, e.g., +91XXXXXXXXXX
+            });
+            console.log('OTP sent:', message.sid);
+        } catch (err) {
+            console.log("SMS not sent", err.message);
+            return res.status(500).json({ error: "SMS not sent", message: err.message });
+        }
 
         res.status(201).json({ message: "OTP Generated: ", otpCode });
 
